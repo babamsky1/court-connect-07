@@ -19,6 +19,7 @@ export interface Booking {
   status: BookingStatus;
   createdAt: number;
   price: number;
+  court?: string;
 }
 
 export interface Message {
@@ -30,17 +31,34 @@ export interface Message {
   createdAt: number;
 }
 
+export interface Review {
+  id: string;
+  bookingId: string;
+  userId: string;
+  userName: string;
+  rating: number; // 1-5
+  comment: string;
+  createdAt: number;
+}
+
 interface AppState {
   currentUser: User | null;
   bookings: Booking[];
   messages: Message[];
+  reviews: Review[];
+  lastReadTimestamps: Record<string, number>;
   login: (name: string, role: Role) => void;
   logout: () => void;
+  updateUserName: (name: string) => void;
   addBooking: (b: Omit<Booking, "id" | "createdAt" | "status">) => Booking;
   updateBookingStatus: (id: string, status: BookingStatus) => void;
+  addReview: (r: Omit<Review, "id" | "createdAt">) => void;
+  getReviews: () => Review[];
   sendMessage: (threadUserId: string, text: string) => void;
   getThread: (userId: string) => Message[];
   listUserThreads: () => { userId: string; userName: string; last: Message }[];
+  getUnreadCount: (userId: string, forRole: Role) => number;
+  markThreadRead: (userId: string) => void;
 }
 
 const uid = () => Math.random().toString(36).slice(2, 10);
@@ -51,6 +69,8 @@ export const useAppStore = create<AppState>()(
       currentUser: null,
       bookings: [],
       messages: [],
+      reviews: [],
+      lastReadTimestamps: {},
       login: (name, role) =>
         set({
           currentUser: {
@@ -60,6 +80,11 @@ export const useAppStore = create<AppState>()(
           },
         }),
       logout: () => set({ currentUser: null }),
+      updateUserName: (name) => {
+        const user = get().currentUser;
+        if (!user) return;
+        set({ currentUser: { ...user, name } });
+      },
       addBooking: (b) => {
         const booking: Booking = {
           ...b,
@@ -74,6 +99,11 @@ export const useAppStore = create<AppState>()(
         set({
           bookings: get().bookings.map((b) => (b.id === id ? { ...b, status } : b)),
         }),
+      addReview: (r) => {
+        const review: Review = { ...r, id: uid(), createdAt: Date.now() };
+        set({ reviews: [...get().reviews, review] });
+      },
+      getReviews: () => get().reviews,
       sendMessage: (threadUserId, text) => {
         const user = get().currentUser;
         if (!user || !text.trim()) return;
@@ -108,10 +138,29 @@ export const useAppStore = create<AppState>()(
           last: v.last,
         }));
       },
+      getUnreadCount: (userId, forRole) => {
+        const lastRead = get().lastReadTimestamps[userId] ?? 0;
+        return get().messages.filter(
+          (m) => m.threadUserId === userId && m.fromRole !== forRole && m.createdAt > lastRead,
+        ).length;
+      },
+      markThreadRead: (userId) =>
+        set({
+          lastReadTimestamps: {
+            ...get().lastReadTimestamps,
+            [userId]: Date.now(),
+          },
+        }),
     }),
     { name: "court-app-store" },
   ),
 );
+
+export const COURTS = [
+  { id: "court-a", name: "Court A · Premium", desc: "Indoor hardwood · climate controlled" },
+  { id: "court-b", name: "Court B · Standard", desc: "Outdoor acrylic · open air" },
+  { id: "court-c", name: "Court C · Practice", desc: "Indoor synthetic · training use" },
+];
 
 export const TIME_SLOTS = [
   "07:00 - 08:00",
@@ -119,6 +168,7 @@ export const TIME_SLOTS = [
   "09:00 - 10:00",
   "10:00 - 11:00",
   "11:00 - 12:00",
+  "__LUNCH__",
   "13:00 - 14:00",
   "14:00 - 15:00",
   "15:00 - 16:00",

@@ -3,18 +3,43 @@ import { useAppStore } from "@/store/app-store";
 import { ChatWindow } from "@/components/ChatWindow";
 
 export default function ChatPage() {
-  const { currentUser } = useAppStore();
+  const { currentUser, bookings } = useAppStore();
 
   useEffect(() => {
     document.title = "Chat with admin — CourtClub";
   }, []);
 
-  if (!currentUser || currentUser.role !== "user") {
+  if (!currentUser) {
     return (
       <main className="mx-auto mt-20 max-w-md px-4 text-center">
-        <h1 className="text-xl font-semibold">Sign in as a user to chat</h1>
+        <h1 className="text-xl font-semibold">Sign in to chat</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Admins can manage threads from the admin dashboard.
+          Sign in to send messages to the admin about your bookings.
+        </p>
+      </main>
+    );
+  }
+
+  if (currentUser.role === "admin") {
+    return (
+      <main className="mx-auto mt-20 max-w-md px-4 text-center">
+        <h1 className="text-xl font-semibold">Admin chat dashboard</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Manage user conversations from the admin dashboard.
+        </p>
+      </main>
+    );
+  }
+
+  const hasBookings = bookings.some((b) => b.userId === currentUser.id);
+
+  if (!hasBookings) {
+    return (
+      <main className="mx-auto mt-20 max-w-md px-4 text-center">
+        <h1 className="text-xl font-semibold">No bookings yet</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Book a court first, then come here to chat with the admin about
+          payment or any questions.
         </p>
       </main>
     );

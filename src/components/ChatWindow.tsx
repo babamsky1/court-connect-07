@@ -12,7 +12,7 @@ export function ChatWindow({
   threadUserId: string;
   threadUserName: string;
 }) {
-  const { currentUser, getThread, sendMessage } = useAppStore();
+  const { currentUser, getThread, sendMessage, markThreadRead } = useAppStore();
   const messages = useAppStore((s) =>
     s.messages
       .filter((m) => m.threadUserId === threadUserId)
@@ -20,6 +20,10 @@ export function ChatWindow({
   );
   const [text, setText] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    markThreadRead(threadUserId);
+  }, [threadUserId, markThreadRead]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -35,7 +39,7 @@ export function ChatWindow({
   };
 
   return (
-    <div className="flex h-[70vh] flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+    <div className="flex h-[50vh] sm:h-[70vh] flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm">
       <div className="flex items-center gap-3 border-b border-border px-5 py-4">
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/15 font-semibold text-primary">
           {threadUserName[0]?.toUpperCase() ?? "?"}

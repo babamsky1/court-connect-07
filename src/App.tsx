@@ -1,11 +1,15 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Routes, Route, Link } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
+import { Footer } from "./components/Footer";
 import Index from "./routes/index";
 import BookingPage from "./routes/booking";
+import BookingConfirmationPage from "./routes/booking-confirmation";
 import MyBookingsPage from "./routes/my-bookings";
 import ChatPage from "./routes/chat";
 import AdminPage from "./routes/admin";
+import ProfilePage from "./routes/profile";
+
 
 const queryClient = new QueryClient();
 
@@ -34,16 +38,21 @@ function NotFound() {
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen bg-background text-foreground">
+      <div className="flex min-h-screen flex-col bg-background text-foreground">
         <Navbar />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/booking" element={<BookingPage />} />
-          <Route path="/my-bookings" element={<MyBookingsPage />} />
-          <Route path="/chat" element={<ChatPage />} />
-          <Route path="/admin" element={<AdminPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <main className="flex-1">
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/booking" element={<BookingPage />} />
+            <Route path="/booking/confirmation" element={<BookingConfirmationPage />} />
+            <Route path="/my-bookings" element={<MyBookingsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/chat" element={<ChatPage />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+        <Footer />
       </div>
     </QueryClientProvider>
   );
