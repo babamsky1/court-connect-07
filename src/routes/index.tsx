@@ -1,21 +1,13 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Link } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { CalendarDays, MessageCircle, ShieldCheck, Clock } from "lucide-react";
 
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "CourtClub — Book your court in seconds" },
-      { name: "description", content: "Pick a date, grab a slot, and we'll confirm your booking over chat." },
-      { property: "og:title", content: "CourtClub — Book your court in seconds" },
-      { property: "og:description", content: "Pick a date, grab a slot, and we'll confirm your booking over chat." },
-    ],
-  }),
-  component: Index,
-});
+export default function Index() {
+  useEffect(() => {
+    document.title = "CourtClub — Book your court in seconds";
+  }, []);
 
-function Index() {
   return (
     <main>
       <section className="relative overflow-hidden">
@@ -30,7 +22,8 @@ function Index() {
               Reserve your court in seconds.
             </h1>
             <p className="mt-5 max-w-lg text-lg text-muted-foreground">
-              Pick a date, choose a time slot, and finalize payment over chat with our admin team. Simple, fast, and reliable.
+              Pick a date, choose a time slot, and finalize payment over chat with our admin team.
+              Simple, fast, and reliable.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
@@ -57,9 +50,18 @@ function Index() {
               <p className="mt-2 text-2xl font-semibold">Indoor hardwood · climate controlled</p>
               <ul className="mt-6 space-y-3 text-sm">
                 <Feature icon={<Clock className="h-4 w-4" />} text="60-minute booking slots" />
-                <Feature icon={<CalendarDays className="h-4 w-4" />} text="Reserve up to 30 days ahead" />
-                <Feature icon={<MessageCircle className="h-4 w-4" />} text="Live chat for payment confirmation" />
-                <Feature icon={<ShieldCheck className="h-4 w-4" />} text="Admin-verified bookings" />
+                <Feature
+                  icon={<CalendarDays className="h-4 w-4" />}
+                  text="Reserve up to 30 days ahead"
+                />
+                <Feature
+                  icon={<MessageCircle className="h-4 w-4" />}
+                  text="Live chat for payment confirmation"
+                />
+                <Feature
+                  icon={<ShieldCheck className="h-4 w-4" />}
+                  text="Admin-verified bookings"
+                />
               </ul>
               <div className="mt-8 rounded-xl bg-muted p-4 text-sm">
                 <p className="font-medium text-foreground">How it works</p>

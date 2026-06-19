@@ -1,5 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useAppStore, type BookingStatus } from "@/store/app-store";
 import { BookingCard } from "@/components/BookingCard";
 import { ChatWindow } from "@/components/ChatWindow";
@@ -7,21 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { format } from "date-fns";
 
-export const Route = createFileRoute("/admin")({
-  head: () => ({
-    meta: [
-      { title: "Admin — CourtClub" },
-      { name: "description", content: "Manage bookings and respond to customer messages." },
-      { property: "og:title", content: "Admin — CourtClub" },
-      { property: "og:description", content: "Manage bookings and respond to customer messages." },
-    ],
-  }),
-  component: AdminPage,
-});
-
-function AdminPage() {
+export default function AdminPage() {
   const { currentUser, bookings, updateBookingStatus, messages } = useAppStore();
   const [activeThread, setActiveThread] = useState<string | null>(null);
+
+  useEffect(() => {
+    document.title = "Admin — CourtClub";
+  }, []);
 
   const stats = useMemo(() => {
     const counts: Record<BookingStatus, number> = {
@@ -58,8 +49,7 @@ function AdminPage() {
     );
   }
 
-  const activeThreadName =
-    threads.find((t) => t.userId === activeThread)?.userName ?? "User";
+  const activeThreadName = threads.find((t) => t.userId === activeThread)?.userName ?? "User";
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10">

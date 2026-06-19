@@ -14,7 +14,9 @@ export function ChatWindow({
 }) {
   const { currentUser, getThread, sendMessage } = useAppStore();
   const messages = useAppStore((s) =>
-    s.messages.filter((m) => m.threadUserId === threadUserId).sort((a, b) => a.createdAt - b.createdAt),
+    s.messages
+      .filter((m) => m.threadUserId === threadUserId)
+      .sort((a, b) => a.createdAt - b.createdAt),
   );
   const [text, setText] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);

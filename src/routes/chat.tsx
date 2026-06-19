@@ -1,21 +1,13 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { useAppStore } from "@/store/app-store";
 import { ChatWindow } from "@/components/ChatWindow";
 
-export const Route = createFileRoute("/chat")({
-  head: () => ({
-    meta: [
-      { title: "Chat with admin — CourtClub" },
-      { name: "description", content: "Coordinate payment confirmation with the admin team." },
-      { property: "og:title", content: "Chat with admin — CourtClub" },
-      { property: "og:description", content: "Coordinate payment confirmation with the admin team." },
-    ],
-  }),
-  component: ChatPage,
-});
-
-function ChatPage() {
+export default function ChatPage() {
   const { currentUser } = useAppStore();
+
+  useEffect(() => {
+    document.title = "Chat with admin — CourtClub";
+  }, []);
 
   if (!currentUser || currentUser.role !== "user") {
     return (

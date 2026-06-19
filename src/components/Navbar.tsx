@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, NavLink } from "react-router-dom";
 import { useAppStore } from "@/store/app-store";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -34,26 +34,42 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-1">
-          <Link to="/" className={linkCls} activeProps={{ className: activeCls }} activeOptions={{ exact: true }}>
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) => `${linkCls} ${isActive ? activeCls : ""}`}
+          >
             Home
-          </Link>
-          <Link to="/booking" className={linkCls} activeProps={{ className: activeCls }}>
+          </NavLink>
+          <NavLink
+            to="/booking"
+            className={({ isActive }) => `${linkCls} ${isActive ? activeCls : ""}`}
+          >
             Book
-          </Link>
+          </NavLink>
           {currentUser?.role === "user" && (
             <>
-              <Link to="/my-bookings" className={linkCls} activeProps={{ className: activeCls }}>
+              <NavLink
+                to="/my-bookings"
+                className={({ isActive }) => `${linkCls} ${isActive ? activeCls : ""}`}
+              >
                 My Bookings
-              </Link>
-              <Link to="/chat" className={linkCls} activeProps={{ className: activeCls }}>
+              </NavLink>
+              <NavLink
+                to="/chat"
+                className={({ isActive }) => `${linkCls} ${isActive ? activeCls : ""}`}
+              >
                 Chat
-              </Link>
+              </NavLink>
             </>
           )}
           {currentUser?.role === "admin" && (
-            <Link to="/admin" className={linkCls} activeProps={{ className: activeCls }}>
+            <NavLink
+              to="/admin"
+              className={({ isActive }) => `${linkCls} ${isActive ? activeCls : ""}`}
+            >
               Admin
-            </Link>
+            </NavLink>
           )}
         </nav>
 
@@ -71,7 +87,7 @@ export function Navbar() {
                 size="sm"
                 onClick={() => {
                   logout();
-                  navigate({ to: "/" });
+                  navigate("/");
                 }}
               >
                 Sign out
@@ -101,7 +117,7 @@ export function Navbar() {
                     onClick={() => {
                       login("Admin", "admin");
                       setOpen(false);
-                      navigate({ to: "/admin" });
+                      navigate("/admin");
                     }}
                   >
                     Sign in as Admin
@@ -112,7 +128,7 @@ export function Navbar() {
                       login(name.trim(), "user");
                       setOpen(false);
                       setName("");
-                      navigate({ to: "/booking" });
+                      navigate("/booking");
                     }}
                   >
                     Continue

@@ -1,22 +1,15 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useAppStore } from "@/store/app-store";
 import { BookingCard } from "@/components/BookingCard";
 import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute("/my-bookings")({
-  head: () => ({
-    meta: [
-      { title: "My bookings — CourtClub" },
-      { name: "description", content: "Track the status of your court bookings." },
-      { property: "og:title", content: "My bookings — CourtClub" },
-      { property: "og:description", content: "Track the status of your court bookings." },
-    ],
-  }),
-  component: MyBookingsPage,
-});
-
-function MyBookingsPage() {
+export default function MyBookingsPage() {
   const { currentUser, bookings, updateBookingStatus } = useAppStore();
+
+  useEffect(() => {
+    document.title = "My bookings — CourtClub";
+  }, []);
 
   if (!currentUser) {
     return (

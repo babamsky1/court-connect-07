@@ -97,7 +97,7 @@ export const useAppStore = create<AppState>()(
           const existing = map.get(m.threadUserId);
           if (!existing || existing.last.createdAt < m.createdAt) {
             map.set(m.threadUserId, {
-              userName: m.fromRole === "user" ? m.fromName : existing?.userName ?? "User",
+              userName: m.fromRole === "user" ? m.fromName : (existing?.userName ?? "User"),
               last: m,
             });
           }

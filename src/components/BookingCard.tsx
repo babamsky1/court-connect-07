@@ -14,13 +14,7 @@ const statusLabel: Record<BookingStatus, string> = {
   cancelled: "Cancelled",
 };
 
-export function BookingCard({
-  booking,
-  actions,
-}: {
-  booking: Booking;
-  actions?: React.ReactNode;
-}) {
+export function BookingCard({ booking, actions }: { booking: Booking; actions?: React.ReactNode }) {
   return (
     <div className="rounded-xl border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md">
       <div className="flex items-start justify-between gap-4">
